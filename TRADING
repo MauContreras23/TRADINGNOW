@@ -1,0 +1,121 @@
+from typing import List
+
+# Clase principal de la plataforma de trading
+class PlataformaTrading:
+    def _init_(self):
+        self.usuarios = []
+        self.operaciones = []
+        self.direccion_bitcoin = "XXXXXXXXXXXXXXX"  # Coloca la dirección de tu billetera de Bitcoin
+        self.direccion_ethereum = "XXXXXXXXXXXXXXX"  # Coloca la dirección de tu billetera de Ethereum
+        self.direccion_tarjeta = "XXXX-XXXX-XXXX-XXXX"  # Coloca el número de tarjeta de tu plataforma
+
+    # Método para que un usuario inicie sesión
+    def iniciar_sesion(self, nombre_usuario: str, contrasena: str):
+        for usuario in self.usuarios:
+            if usuario.nombre_usuario == nombre_usuario and usuario.verificar_contrasena(contrasena):
+                return usuario
+        return None  # Usuario no encontrado o contraseña incorrecta
+
+    # Método para que un usuario se registre en la plataforma
+    def registrar_usuario(self, nombre: str, nombre_usuario: str, contrasena: str, saldo_inicial: float):
+        nuevo_usuario = Usuario(nombre, nombre_usuario, contrasena, saldo_inicial)
+        self.usuarios.append(nuevo_usuario)
+
+    # Método para que un usuario deposite fondos en su cuenta con criptomonedas
+    def depositar_criptomoneda(self, usuario, tipo_criptomoneda: str, cantidad: float):
+        # Aquí podrías implementar la lógica para gestionar depósitos de criptomonedas
+        pass
+
+    # Método para que un usuario deposite fondos en su cuenta con tarjeta de crédito/debito
+    def depositar_tarjeta(self, usuario, numero_tarjeta: str, cantidad: float):
+        # Aquí podrías implementar la lógica para gestionar depósitos con tarjeta
+        pass
+
+    # Método para que un usuario retire fondos de su cuenta
+    def retirar_fondos(self, usuario, cantidad: float):
+        usuario.retirar(cantidad)
+
+    # Método para que un usuario realice una operación de trading
+    def realizar_operacion(self, usuario, tipo: str, activo: str, cantidad: float, precio: float, stop_loss: float, take_profit: float):
+        nueva_operacion = Operacion(tipo, activo, cantidad, precio, stop_loss, take_profit)
+        self.operaciones.append(nueva_operacion)
+        usuario.agregar_operacion(nueva_operacion)
+
+    # Otras funciones de la plataforma, como gestión de operaciones, análisis de mercado, etc.
+
+# Clase para representar a un usuario de la plataforma
+class Usuario:
+    def _init_(self, nombre: str, nombre_usuario: str, contrasena: str, saldo_inicial: float):
+        self.nombre = nombre
+        self.nombre_usuario = nombre_usuario
+        self.contrasena = contrasena
+        self.saldo = saldo_inicial
+        self.operaciones = []
+
+    # Métodos getters y setters
+    def verificar_contrasena(self, contrasena: str):
+        return self.contrasena == contrasena
+
+    def depositar(self, cantidad: float):
+        self.saldo += cantidad
+
+    def retirar(self, cantidad: float):
+        if cantidad <= self.saldo:
+            self.saldo -= cantidad
+        else:
+            print("Saldo insuficiente")
+
+    def agregar_operacion(self, operacion):
+        self.operaciones.append(operacion)
+
+    # Otros métodos para gestionar operaciones, consultar saldo, etc.
+
+# Clase para representar una operación de trading
+class Operacion:
+    def _init_(self, tipo: str, activo: str, cantidad: float, precio: float, stop_loss: float, take_profit: float):
+        self.tipo = tipo  # Compra o venta
+        self.activo = activo  # Nombre del activo
+        self.cantidad = cantidad  # Cantidad del activo
+        self.precio = precio  # Precio al que se realizó la operación
+        self.stop_loss = stop_loss  # Nivel de stop loss
+        self.take_profit = take_profit  # Nivel de take profit
+
+    # Métodos getters y setters
+
+# Función principal para ejecutar la aplicación
+def main():
+    plataforma = PlataformaTrading()
+
+    # Menú principal
+    print("Bienvenido a la Plataforma de Trading")
+
+    while True:
+        print("1. Iniciar sesión")
+        print("2. Registrarse")
+        print("3. Salir")
+        opcion = int(input("Seleccione una opción: "))
+
+        if opcion == 1:
+            nombre_usuario = input("Nombre de usuario: ")
+            contrasena = input("Contraseña: ")
+            usuario = plataforma.iniciar_sesion(nombre_usuario, contrasena)
+            if usuario:
+                print(f"Inicio de sesión exitoso. Bienvenido, {usuario.nombre_usuario}!")
+                # Aquí puedes implementar el menú de operaciones para el usuario
+            else:
+                print("Nombre de usuario o contraseña incorrectos")
+        elif opcion == 2:
+            nombre = input("Nombre: ")
+            nombre_usuario = input("Nombre de usuario: ")
+            contrasena = input("Contraseña: ")
+            saldo_inicial = float(input("Saldo inicial: "))
+            plataforma.registrar_usuario(nombre, nombre_usuario, contrasena, saldo_inicial)
+            print("Usuario registrado correctamente. Ahora puede iniciar sesión.")
+        elif opcion == 3:
+            print("¡Hasta luego!")
+            break
+        else:
+            print("Opción inválida")
+
+# Llamar a la función principal
+main()
